@@ -1,5 +1,6 @@
 # høst
 > a minecraft-like isometric voxel survival game  
+høst is the successor to lodus, made using my latest engine: [høstsjø](https://github.com/viylouu/hostsjo)
 
 ## compiling
 to compile the game, run this command:  
