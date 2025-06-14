@@ -11,7 +11,7 @@ main :: proc() {
 
     eng.vsync(true)
 
-    prog_base := shaders.load_shader()
+    prog_base := shaders.load_program("data/shaders/base.vert", "data/shaders/base.frag")
 
     eng.loop(
         proc() /* update */ {
