@@ -9,3 +9,5 @@
 - (X) basic blocktypes (dirt, grass, stone, log, leaves, water)
 - (X) surface feature generation
 - (X) actually rendering terrain
+- (X) block placing
+- (X) block breaking
