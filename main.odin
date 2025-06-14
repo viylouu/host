@@ -1,6 +1,7 @@
 package main
 
 import "eng"
+import "eng/shaders"
 
 import gl "vendor:OpenGL"
 
@@ -9,6 +10,8 @@ main :: proc() {
     defer eng.end()
 
     eng.vsync(true)
+
+    prog_base := shaders.load_shader()
 
     eng.loop(
         proc() /* update */ {
