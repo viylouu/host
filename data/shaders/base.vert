@@ -8,6 +8,8 @@ const vec3 facePosses[] = vec3[](
     vec3(0,0,0), vec3(0,1,0), vec3(1,1,0), vec3(1,1,0), vec3(1,0,0), vec3(0,0,0)
 );
 
+out vec2 uv;
+
 void main() {
     int index = gl_VertexID / 6;
     int packdata = data[index];
@@ -19,6 +21,8 @@ void main() {
     vec3 pos = vec3(x,y,z);
 
     pos += facePosses[cVertexID];
+
+    uv = facePosses[cVertexID].xy;
 
     gl_Position = vec4(pos.xy - vec2(.5), 0,1);
 }
