@@ -1,4 +1,4 @@
-#version 460 core
+#version 430 core
 
 layout(binding = 0, std430) readonly buffer SSBO {
     int data[];

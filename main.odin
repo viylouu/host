@@ -6,6 +6,7 @@ import "eng/textures"
 import "eng/error"
 
 import gl "vendor:OpenGL"
+import fw "vendor:glfw"
 
 prog_base:     u32
 prog_final:    u32
@@ -83,11 +84,11 @@ main :: proc() {
 
     eng.loop(
         proc() /* update */ {
-
+            if bool(fw.GetKey(eng.__handle, fw.KEY_ESCAPE)) { fw.SetWindowShouldClose(eng.__handle, fw.TRUE) }
         }, proc() /* render */ { 
             //gl.BindFramebuffer(gl.FRAMEBUFFER, fbo)
 
-                gl.Viewport(0,0,640,360)
+                //gl.Viewport(0,0,640,360)
 
                 gl.ClearColor(106 /256.,176 /256.,173 /256., 1)
                 gl.Clear(gl.COLOR_BUFFER_BIT)
