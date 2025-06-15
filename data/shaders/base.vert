@@ -30,7 +30,8 @@ void main() {
 
     pos = vec3(ndc, 0);
 
-    uv = facePosses[cVertexID].xy;
+    int uvo = (packdata >> 15) & 0xFF;
+    uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
     gl_Position = vec4(pos.xy, float(index)/float(vertices) - 1,1);
 }

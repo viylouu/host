@@ -5,9 +5,20 @@ import "eng/shaders"
 import "eng/textures"
 import "eng/error"
 
+import noise "lib/fastnoiselite"
+
 import gl "vendor:OpenGL"
 import fw "vendor:glfw"
 import stbi "vendor:stb/image"
+
+blocktype :: enum u8 {
+    default = 0 + (0 <<4),
+    grass   = 0 + (1 <<4),
+    dirt    = 1 + (1 <<4),
+    stone   = 0 + (2 <<4),
+    log     = 2 + (1 <<4),
+    leaves  = 3 + (1 <<4)
+}
 
 prog_base:     u32
 prog_final:    u32
@@ -17,6 +28,7 @@ tex:           u32
 vert_lc:       i32
 
 chunk_data: [dynamic]i32
+worldnoise: noise.FNL_State
 
 main :: proc() {
     eng.init(800,600,"høst"); defer eng.end()
@@ -31,8 +43,11 @@ main :: proc() {
 
     gl.CreateBuffers(1, &ssbo); defer gl.DeleteBuffers(1, &ssbo)
 
+    worldnoise = noise.create_state(0)
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
-       add_block(&chunk_data, i32(x),i32(y),i32(z))
+        if noise.get_noise_2d(worldnoise,f32(x),f32(z)) * 16 + 16 < f32(y) {
+            add_block(&chunk_data, i32(x),i32(y),i32(z), blocktype.stone)
+        }
     }}}
 
     defer free(&chunk_data)
@@ -64,7 +79,7 @@ main :: proc() {
     )
 }
 
-add_block :: proc(_chunk_data: ^[dynamic]i32, x,y,z: i32) {
-    vtx: i32 = (x | y << 5 | z << 10)
+add_block :: proc(_chunk_data: ^[dynamic]i32, x,y,z: i32, type: blocktype) {
+    vtx: i32 = (x | y << 5 | z << 10 | i32(type) << 15)
     append(_chunk_data, vtx)
 }
