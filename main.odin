@@ -28,9 +28,11 @@ main :: proc() {
     prog_final = shaders.load_program("data/shaders/final.vert", "data/shaders/final.frag")
 
     gl.GenVertexArrays(1, &vao)
+    defer gl.DeleteVertexArrays(1, &vao)
     gl.BindVertexArray(vao)
 
     gl.CreateBuffers(1, &ssbo)
+    defer gl.DeleteBuffers(1, &ssbo)
 
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
        add_block(&chunk_data, i32(x),i32(y),i32(z))
