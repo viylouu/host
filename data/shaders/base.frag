@@ -7,7 +7,7 @@ in vec2 uv;
 out vec4 fCol;
 
 void main() {
-    vec4 samp = texture(atlas, uv/16. + vec2(0, 15)/16.);
+    vec4 samp = texture(atlas, ( uv )/16.);
     if (samp.a < 0.1) {
         discard;
     }
