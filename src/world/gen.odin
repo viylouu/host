@@ -21,10 +21,12 @@ gen_chunk :: proc() -> chunk {
         }
     }}}
 
-    chunk_verts := mesh_chunk(chunk_data)
+    chunk_verts, chunk_vao, chunk_ssbo := mesh_chunk(chunk_data)
 
     return chunk {
         mesh = chunk_verts,
-        data = chunk_data
+        data = chunk_data,
+        vao  = chunk_vao,
+        ssbo = chunk_ssbo
     }
 }

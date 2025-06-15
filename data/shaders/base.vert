@@ -10,6 +10,8 @@ const vec3 facePosses[] = vec3[](
 
 uniform int vertices;
 
+uniform vec3 chunkPos;
+
 out vec2 uv;
 
 void main() {
@@ -22,7 +24,10 @@ void main() {
     int z = (packdata >> 10) & 0x1F;
     vec3 pos = vec3(x,y,z);
 
-    vec2 pixel = vec2(pos.z*6/16.-pos.x*6/16., pos.y*6/16. - pos.z*3/16. - pos.x*3/16.) + (facePosses[cVertexID].xy - vec2(.5)) + vec2(320/16.,180/16.);
+    vec2 isoblock = vec2(pos.z*6/16.-pos.x*6/16., pos.y*6/16. - pos.z*3/16. - pos.x*3/16.);
+    vec2 isochunk = vec2(chunkPos.z*12-chunkPos.x*12, chunkPos.y*12 - chunkPos.z*6 - chunkPos.x*6);
+    vec2 iso = isoblock + isochunk;
+    vec2 pixel = iso + (facePosses[cVertexID].xy - vec2(.5)) + vec2(320/16.,180/16.);
     vec2 ndc = vec2(
                     (float(pixel.x) / (640./16.)) * 2 - 1,
                     1 - (float(pixel.y) / (360./16.)) * 2
