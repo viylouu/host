@@ -1,11 +1,11 @@
 package main
 
-import "eng"
-import "eng/shaders"
-import "eng/textures"
-import "eng/error"
+import "../eng"
+import "../eng/shaders"
+import "../eng/textures"
+import "../eng/error"
 
-import noise "lib/fastnoiselite"
+import noise "../lib/fastnoiselite"
 
 import gl "vendor:OpenGL"
 import fw "vendor:glfw"
