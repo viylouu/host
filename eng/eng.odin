@@ -53,8 +53,6 @@ loop :: proc(update,render: proc()) {
 
 end :: proc() {
     for item in shaders.__stuff_to_free { free(item) }
-    for item in shaders.__stuff_to_delete { gl.DeleteProgram(item^) }
-    for item in textures.__stuff_to_delete { gl.DeleteTextures(1, item) }
 
     fw.DestroyWindow(__handle)
     fw.Terminate()

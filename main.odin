@@ -19,29 +19,28 @@ vert_lc:       i32
 chunk_data: [dynamic]i32
 
 main :: proc() {
-    eng.init(800,600,"høst")
-    defer eng.end()
+    eng.init(800,600,"høst"); defer eng.end()
 
     eng.vsync(true)
 
-    prog_base = shaders.load_program("data/shaders/base.vert", "data/shaders/base.frag")
-    prog_final = shaders.load_program("data/shaders/final.vert", "data/shaders/final.frag")
+    prog_base = shaders.load_program("data/shaders/base.vert", "data/shaders/base.frag"); defer gl.DeleteProgram(prog_base)
+    prog_final = shaders.load_program("data/shaders/final.vert", "data/shaders/final.frag"); defer gl.DeleteProgram(prog_final)
 
-    gl.GenVertexArrays(1, &vao)
-    defer gl.DeleteVertexArrays(1, &vao)
+    gl.GenVertexArrays(1, &vao); defer gl.DeleteVertexArrays(1, &vao)
     gl.BindVertexArray(vao)
 
-    gl.CreateBuffers(1, &ssbo)
-    defer gl.DeleteBuffers(1, &ssbo)
+    gl.CreateBuffers(1, &ssbo); defer gl.DeleteBuffers(1, &ssbo)
 
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
        add_block(&chunk_data, i32(x),i32(y),i32(z))
     }}}
+
+    defer free(&chunk_data)
     
     gl.NamedBufferStorage(ssbo, size_of(i32) * len(chunk_data), &chunk_data[0], 0)
 
     stbi.set_flip_vertically_on_load(0)
-    tex = textures.load_texture("data/sprites/atlas.png")
+    tex = textures.load_texture("data/sprites/atlas.png"); defer gl.DeleteTextures(1, &tex)
 
     vert_lc = gl.GetUniformLocation(prog_base, "vertices")
 
