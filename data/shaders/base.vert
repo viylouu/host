@@ -43,6 +43,6 @@ void main() {
     int uvo = (packdata >> 15) & 0xFF;
     uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
-    dist = float(index) +(chunkPos.x +chunkPos.y +chunkPos.z)*16384    
+    dist = float(index) +(chunkPos.x +chunkPos.y +chunkPos.z)*16384;
     gl_Position = proj * vec4(pos.xy, dist, 1);
 }
