@@ -27,14 +27,6 @@ gen_chunk :: proc() -> chunk {
         if noise.get_noise_2d(__surfnoise,f32(x),f32(z)) * 4 + 16 > f32(y)+1 {
             chunk_data[x][y][z] = blocktype.dirt
         }
-
-        //if noise.get_noise_2d(__stonenoise,f32(x),f32(z)) * 3 + 4 < f32(y) {
-        //    chunk_data[x][y][z] = blocktype.stone
-        //}
-
-        if chunk_data[x][y][z] != blocktype.air {
-            chunk_data[x][y][z] = blocktype.box
-        }
     }}}
 
     chunk_verts, chunk_vao, chunk_ssbo := mesh_chunk(chunk_data)
