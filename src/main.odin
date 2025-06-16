@@ -6,6 +6,7 @@ import "../eng"
 import "../eng/shaders"
 import "../eng/textures"
 import "../eng/error"
+import "../eng/time"
 
 import noise "../lib/fastnoiselite"
 

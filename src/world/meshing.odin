@@ -13,9 +13,13 @@ mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]i32, u32,u32) {
     // super duper ultro complex meshing
     chunk_verts: [dynamic]i32
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
-        if data[x][y][z] != blocktype.air {
-            add_block(&chunk_verts, i32(x),i32(y),i32(z), data[x][y][z])
-        }
+        if data[x][y][z] == blocktype.air { continue }
+
+        if x != 31 && data[x+1][y][z] != blocktype.air &&
+           y != 31 && data[x][y+1][z] != blocktype.air &&
+           z != 31 && data[x][y][z+1] != blocktype.air { continue }
+
+        add_block(&chunk_verts, i32(x),i32(y),i32(z), data[x][y][z])
     }}}
 
     gl.NamedBufferStorage(ssbo, size_of(i32) * len(chunk_verts), &chunk_verts[0], 0)

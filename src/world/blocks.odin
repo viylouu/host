@@ -8,5 +8,7 @@ blocktype :: enum u8 {
     log     = 2 + (1 <<4),
     leaves  = 3 + (1 <<4),
 
+    box     = 1 + (0 <<4),
+
     air     = 15 + (15 <<4)
 }

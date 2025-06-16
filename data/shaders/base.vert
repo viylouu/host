@@ -14,6 +14,10 @@ uniform vec3 chunkPos;
 
 out vec2 uv;
 
+vec2 isometricize(vec3 pos) {
+    return vec2(-pos.x*6/16. +pos.z*6/16., -pos.y*6/16. +pos.z*3/16. +pos.x*3/16.);
+}
+
 void main() {
     int index = gl_VertexID / 6;
     int packdata = data[index];
@@ -24,19 +28,19 @@ void main() {
     int z = (packdata >> 10) & 0x1F;
     vec3 pos = vec3(x,y,z);
 
-    vec2 isoblock = vec2(pos.z*6/16.-pos.x*6/16., pos.y*6/16. - pos.z*3/16. - pos.x*3/16.);
-    vec2 isochunk = vec2(chunkPos.z*12-chunkPos.x*12, chunkPos.y*12 - chunkPos.z*6 - chunkPos.x*6);
+    vec2 isoblock = isometricize(pos);
+    vec2 isochunk = isometricize(chunkPos*32);
     vec2 iso = isoblock + isochunk;
     vec2 pixel = iso + (facePosses[cVertexID].xy - vec2(.5)) + vec2(320/16.,180/16.);
     vec2 ndc = vec2(
-                    (float(pixel.x) / (640./16.)) * 2 - 1,
-                    1 - (float(pixel.y) / (360./16.)) * 2
-                );
+        (float(pixel.x) / (640./16.)) * 2 - 1,
+        1 - (float(pixel.y) / (360./16.)) * 2
+    );
 
     pos = vec3(ndc, 0);
 
     int uvo = (packdata >> 15) & 0xFF;
     uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
-    gl_Position = vec4(pos.xy, float(index)/float(vertices) - 1,1);
+    gl_Position = vec4(pos.xy, 1-float(index)/float(vertices) - 1,1);
 }
