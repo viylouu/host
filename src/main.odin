@@ -24,7 +24,7 @@ chpos_lc:      i32
 chunk: world.chunk
 
 main :: proc() {
-    eng.init(800,600,"høst"); defer eng.end()
+    eng.init(1280,720,"høst"); defer eng.end()
     world.init(0)
 
     eng.vsync(true)
