@@ -8,6 +8,6 @@
 - basic worldgen
 - basic blocktypes (dirt, grass, stone, log, leaves, water)
 - (X) surface feature generation
-- (X) multi chunk rendering
+- multi chunk rendering
 - (X) block placing
 - (X) block breaking

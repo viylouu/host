@@ -9,9 +9,10 @@ const vec3 facePosses[] = vec3[](
 );
 
 uniform int vertices;
-
 uniform vec3 chunkPos;
+uniform mat4 proj;
 
+out float dist;
 out vec2 uv;
 
 vec2 isometricize(vec3 pos) {
@@ -42,5 +43,6 @@ void main() {
     int uvo = (packdata >> 15) & 0xFF;
     uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
-    gl_Position = vec4(pos.xy, 1-float(index)/float(vertices) - 1,1);
+    dist = float(index) +(chunkPos.x +chunkPos.y +chunkPos.z)*32768;
+    gl_Position = proj * vec4(pos.xy, dist, 1);
 }

@@ -3,6 +3,7 @@
 uniform sampler2D atlas;
 
 in vec2 uv;
+in float dist;
 
 out vec4 fCol;
 

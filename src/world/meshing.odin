@@ -4,12 +4,6 @@ import gl "vendor:OpenGL"
 
 @private
 mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]i32, u32,u32) {
-    vao, ssbo: u32
-    gl.GenVertexArrays(1, &vao)
-    gl.BindVertexArray(vao)
-
-    gl.CreateBuffers(1, &ssbo)
-
     // super duper ultro complex meshing
     chunk_verts: [dynamic]i32
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
@@ -22,6 +16,13 @@ mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]i32, u32,u32) {
         add_block(&chunk_verts, i32(x),i32(y),i32(z), data[x][y][z])
     }}}
 
+    if len(chunk_verts) == 0 { return nil, 0,0 }
+
+    vao, ssbo: u32
+    gl.GenVertexArrays(1, &vao)
+    gl.BindVertexArray(vao)
+
+    gl.CreateBuffers(1, &ssbo)
     gl.NamedBufferStorage(ssbo, size_of(i32) * len(chunk_verts), &chunk_verts[0], 0)
 
     return chunk_verts, vao,ssbo
@@ -37,7 +38,7 @@ delete_chunk :: proc(chk: ^chunk) {
     chk := chk
     gl.DeleteBuffers(1, &chk.ssbo)
     gl.DeleteVertexArrays(1, &chk.vao)
-    free(&chk.mesh)
+    delete(chk.mesh)
     free(&chk.data)
     chk = nil
 }
