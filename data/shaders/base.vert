@@ -1,7 +1,12 @@
 #version 430 core
 
+struct vtxData {
+    int low;
+    int high;
+};
+
 layout(binding = 0, std430) readonly buffer SSBO {
-    int data[];
+    vtxData data[];
 };
 
 const vec3 facePosses[] = vec3[](
@@ -21,12 +26,12 @@ vec2 isometricize(vec3 pos) {
 
 void main() {
     int index = gl_VertexID / 6;
-    int packdata = data[index];
+    vtxData packdata = data[index];
     int cVertexID = gl_VertexID % 6;
 
-    int x = (packdata) & 0x1F;
-    int y = (packdata >> 5) & 0x1F;
-    int z = (packdata >> 10) & 0x1F;
+    int x = (packdata.low) & 0x1F;
+    int y = (packdata.low >> 5) & 0x1F;
+    int z = (packdata.low >> 10) & 0x1F;
     vec3 pos = vec3(x,y,z);
 
     vec2 isoblock = isometricize(pos);
@@ -40,7 +45,7 @@ void main() {
 
     pos = vec3(ndc, 0);
 
-    int uvo = (packdata >> 15) & 0xFF;
+    int uvo = (packdata.low >> 15) & 0xFF;
     uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
     dist = float(index) +(chunkPos.x +chunkPos.y +chunkPos.z)*16384;

@@ -3,9 +3,9 @@ package world
 import gl "vendor:OpenGL"
 
 @private
-mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]i32, u32,u32) {
+mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]vertex, u32,u32) {
     // super duper ultro complex meshing
-    chunk_verts: [dynamic]i32
+    chunk_verts: [dynamic]vertex
     for y in 0..<32 { for x in 0..<32 { for z in 0..<32 { 
         if data[x][y][z] == blocktype.air { continue }
 
@@ -23,15 +23,16 @@ mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]i32, u32,u32) {
     gl.BindVertexArray(vao)
 
     gl.CreateBuffers(1, &ssbo)
-    gl.NamedBufferStorage(ssbo, size_of(i32) * len(chunk_verts), &chunk_verts[0], 0)
+    gl.NamedBufferStorage(ssbo, size_of(vertex) * len(chunk_verts), &chunk_verts[0], 0)
 
     return chunk_verts, vao,ssbo
 }
 
 @private
-add_block :: proc(chunk_verts: ^[dynamic]i32, x,y,z: i32, type: blocktype) {
-    vtx: i32 = (x | y << 5 | z << 10 | i32(type) << 15)
-    append(chunk_verts, vtx)
+add_block :: proc(chunk_verts: ^[dynamic]vertex, x,y,z: i32, type: blocktype) {
+    low := (x | y << 5 | z << 10 | i32(type) << 15)
+    high: i32 = 0
+    append(chunk_verts, vertex{low,high})
 }
 
 delete_chunk :: proc(chk: ^chunk) {
