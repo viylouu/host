@@ -13,7 +13,13 @@ mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]vertex, u32,u32) {
            y != 31 && data[x][y+1][z] != blocktype.air &&
            z != 31 && data[x][y][z+1] != blocktype.air { continue }
 
-        add_block(&chunk_verts, i32(x),i32(y),i32(z), data[x][y][z])
+        nx := false
+        nz := false
+
+        if x != 0 && data[x-1][y][z] == blocktype.air { nx = true }
+        if z != 0 && data[x][y][z-1] == blocktype.air { nz = true }
+
+        add_block(&chunk_verts, i32(x),i32(y),i32(z), data[x][y][z], nx,nz)
     }}}
 
     if len(chunk_verts) == 0 { return nil, 0,0 }
@@ -29,9 +35,9 @@ mesh_chunk :: proc(data: [32][32][32]blocktype) -> ([dynamic]vertex, u32,u32) {
 }
 
 @private
-add_block :: proc(chunk_verts: ^[dynamic]vertex, x,y,z: i32, type: blocktype) {
-    low := (x | y << 5 | z << 10 | i32(type) << 15)
-    high: i32 = 0
+add_block :: proc(chunk_verts: ^[dynamic]vertex, x,y,z: i32, type: blocktype, neighbor_x,neighbor_z: bool) {
+    low  := (x | y << 5 | z << 10 | i32(type) << 15)
+    high := (i32(neighbor_x) | i32(neighbor_z) << 1)
     append(chunk_verts, vertex{low,high})
 }
 

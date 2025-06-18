@@ -19,6 +19,8 @@ uniform mat4 proj;
 
 out float dist;
 out vec2 uv;
+flat out int neighx;
+flat out int neighz;
 
 vec2 isometricize(vec3 pos) {
     return vec2(-pos.x*6/16. +pos.z*6/16., -pos.y*6/16. +pos.z*3/16. +pos.x*3/16.);
@@ -37,10 +39,10 @@ void main() {
     vec2 isoblock = isometricize(pos);
     vec2 isochunk = isometricize(chunkPos*32);
     vec2 iso = isoblock + isochunk;
-    vec2 pixel = iso + (facePosses[cVertexID].xy - vec2(.5)) + vec2(320/16.,180/16.);
+    vec2 pixel = iso + (facePosses[cVertexID].xy - vec2(.5)) + vec2(160/16.,90/16.);
     vec2 ndc = vec2(
-        (float(pixel.x) / (640./16.)) * 2 - 1,
-        1 - (float(pixel.y) / (360./16.)) * 2
+        (float(pixel.x) / (320./16.)) * 2 - 1,
+        1 - (float(pixel.y) / (180./16.)) * 2
     );
 
     pos = vec3(ndc, 0);
@@ -50,4 +52,10 @@ void main() {
 
     dist = (x+y+z) +(chunkPos.x +chunkPos.y +chunkPos.z)*32768;
     gl_Position = proj * vec4(pos.xy, dist, 1);
+
+    int nx = (packdata.high) & 0x1;
+    int nz = (packdata.high >> 1) & 0x1;
+
+    neighx = nx;
+    neighz = nz;
 }

@@ -21,7 +21,13 @@ vec3 :: [3]int
 
 prog_base:     u32
 prog_final:    u32
-tex:           u32
+
+atlas:         u32; atlas_lc:     i32
+atlas_n:       u32; atlas_n_lc:   i32
+atlas_h:       u32; atlas_h_lc:   i32
+atlas_lut:     u32; atlas_lut_lc: i32
+palette:       u32; palette_lc:   i32
+inventory:     u32
 
 verts_lc:      i32
 chpos_lc:      i32
@@ -55,7 +61,19 @@ main :: proc() {
     }}}
     
     stbi.set_flip_vertically_on_load(0)
-    tex = textures.load_texture("data/sprites/atlas.png"); defer gl.DeleteTextures(1, &tex)
+    atlas = textures.load_texture("data/sprites/atlas.png", gl.TEXTURE0); defer gl.DeleteTextures(1, &atlas)
+    atlas_n = textures.load_texture("data/sprites/atlas-n.png", gl.TEXTURE1); defer gl.DeleteTextures(1, &atlas_n)
+    atlas_h = textures.load_texture("data/sprites/atlas-h.png", gl.TEXTURE2); defer gl.DeleteTextures(1, &atlas_h)
+    atlas_lut = textures.load_texture("data/sprites/atlas-lut.png", gl.TEXTURE3); defer gl.DeleteTextures(1, &atlas_lut)
+    palette = textures.load_texture("data/sprites/palette.png", gl.TEXTURE4); defer gl.DeleteTextures(1, &palette)
+
+    atlas_lc     = gl.GetUniformLocation(prog_base, "atlas")
+    atlas_n_lc   = gl.GetUniformLocation(prog_base, "atlas_n")
+    atlas_h_lc   = gl.GetUniformLocation(prog_base, "atlas_h")
+    atlas_lut_lc = gl.GetUniformLocation(prog_base, "atlas_lut")
+    palette_lc   = gl.GetUniformLocation(prog_base, "palette")
+
+    inventory = textures.load_texture("data/sprites/inventory.png"); defer gl.DeleteTextures(1, &inventory)
 
     verts_lc = gl.GetUniformLocation(prog_base, "vertices")
     chpos_lc = gl.GetUniformLocation(prog_base, "chunkPos")
@@ -73,7 +91,24 @@ main :: proc() {
             gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
             
             gl.UseProgram(prog_base)
-            gl.BindTexture(gl.TEXTURE_2D, tex)
+
+            gl.ActiveTexture(gl.TEXTURE0)
+            gl.BindTexture(gl.TEXTURE_2D, atlas)
+            gl.ActiveTexture(gl.TEXTURE1)
+            gl.BindTexture(gl.TEXTURE_2D, atlas_n)
+            gl.ActiveTexture(gl.TEXTURE2)
+            gl.BindTexture(gl.TEXTURE_2D, atlas_h)
+            gl.ActiveTexture(gl.TEXTURE3)
+            gl.BindTexture(gl.TEXTURE_2D, atlas_lut)
+            gl.ActiveTexture(gl.TEXTURE4)
+            gl.BindTexture(gl.TEXTURE_2D, palette)
+
+            gl.Uniform1i(atlas_lc, 0)
+            gl.Uniform1i(atlas_n_lc, 1)
+            gl.Uniform1i(atlas_h_lc, 2)
+            gl.Uniform1i(atlas_lut_lc, 3)
+            gl.Uniform1i(palette_lc, 4)
+
             gl.UniformMatrix4fv(proj_lc, 1, gl.FALSE, transmute([^]f32)&proj_mat)
 
             for x in -4..=4 { for y in -4..=4 { for z in -4..=4 { 
@@ -84,7 +119,7 @@ main :: proc() {
                 gl.BindBufferBase(gl.SHADER_STORAGE_BUFFER, 0, chunk.ssbo)
                 gl.BindVertexArray(chunk.vao)
                 gl.DrawArrays(gl.TRIANGLES, 0, cast(i32)len(chunk.mesh) * 6)
-            }}}      
+            }}} 
         }
     )
 }
