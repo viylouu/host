@@ -22,6 +22,7 @@ void main() {
         1 - (float(pixel.y) / (180./16.)) * 2
     );
 
-    gl_Position = proj * vec4(ndc, 200000, 1);
+    float dist = pos.x + pos.y*1024 + pos.z*32;
+    gl_Position = proj * vec4(ndc, dist, 1);
     uv = fpos;
 }

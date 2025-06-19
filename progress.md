@@ -1,7 +1,7 @@
 # progress
 
 ## prototype
-- (X) player movement
+- player movement
 - (X) player collision
 - (X) player physics
 - (X) player fly mode

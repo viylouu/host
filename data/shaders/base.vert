@@ -50,7 +50,7 @@ void main() {
     int uvo = (packdata.low >> 15) & 0xFF;
     uv = facePosses[cVertexID].xy + vec2(uvo & 0xF, (uvo>>4) & 0xF);
 
-    dist = (x+y+z) +(chunkPos.x +chunkPos.y +chunkPos.z)*32768;
+    dist = (x+y*1024+z*32) +(chunkPos.x*32 +chunkPos.y*32768 +chunkPos.z*1024);
     gl_Position = proj * vec4(pos.xy, dist, 1);
 
     int nx = (packdata.high) & 0x1;

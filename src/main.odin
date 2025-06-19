@@ -96,6 +96,8 @@ main :: proc() {
     eng.loop(
         proc() /* update */ {
             if bool(fw.GetKey(eng.__handle, fw.KEY_ESCAPE)) { fw.SetWindowShouldClose(eng.__handle, fw.TRUE) }
+
+            player.move()
         }, proc() /* render */ { 
             gl.ClearColor(106 /256.,176 /256.,173 /256., 1)
             gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
