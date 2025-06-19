@@ -36,6 +36,7 @@ chpos_lc:      i32
 proj_lc:       i32
 
 proj_p_lc:     i32
+pos_p_lc:      i32
 
 proj_mat:      sl.mat4
 
@@ -86,6 +87,7 @@ main :: proc() {
     proj_lc  = gl.GetUniformLocation(prog_base, "proj")
 
     proj_p_lc = gl.GetUniformLocation(prog_player, "proj")
+    pos_p_lc  = gl.GetUniformLocation(prog_player, "pos")
 
     gl.Enable(gl.DEPTH_TEST)
 
@@ -133,7 +135,10 @@ main :: proc() {
 
             /* player */ {
                 gl.UseProgram(prog_player)
+
                 gl.UniformMatrix4fv(proj_p_lc, 1, gl.FALSE, transmute([^]f32)&proj_mat)
+                gl.Uniform3f(pos_p_lc, player.pos.x, player.pos.y, player.pos.z)
+
                 gl.DrawArrays(gl.TRIANGLES, 0, 6)
                 // here is why we don't need a vbo or vao (vao is already exist from last draw call)
                 /* 
