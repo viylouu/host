@@ -31,10 +31,10 @@ gen_chunk :: proc(i,j,k: int) -> chunk {
         chunk_data[x][y][z] = blocktype.air
 
         if surf2d[x][z] > f32(y +j*32) {
-            chunk_data[x][y][z] = blocktype.grass // grass
+            chunk_data[x][y][z] = blocktype.default // grass
         } else { continue }
         if surf2d[x][z] > f32(y +j*32)+1 {
-            chunk_data[x][y][z] = blocktype.dirt // dirt
+            chunk_data[x][y][z] = blocktype.default // dirt
         }
     }}}
 
